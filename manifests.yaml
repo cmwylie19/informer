@@ -29,7 +29,7 @@ spec:
     spec:
       serviceAccountName: informer
       containers:
-      - image: docker.io/library/informer:v1alpha1
+      - image: cmwylie19/informer:v1alpha1
         name: informer
         ports:
         - containerPort: 8443

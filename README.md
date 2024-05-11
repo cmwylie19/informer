@@ -1,7 +1,7 @@
 ```bash
 k3d cluster delete --all
 k3d cluster create
-docker build -t informer:v1alpha1 .  
+docker build -t cmwylie19/informer:v1alpha1 .  
 k3d image import informer:v1alpha1 -c k3s-default
 k apply -f manifests.yaml
 sleep 10;

@@ -1,0 +1,77 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: informer
+spec: {}
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: informer
+  name: informer
+  namespace: informer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: informer
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: informer
+    spec:
+      serviceAccountName: informer
+      containers:
+      - image: docker.io/library/informer:v1alpha1
+        name: informer
+        ports:
+        - containerPort: 8443
+        resources: {}
+        imagePullPolicy: IfNotPresent
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: informer
+  name: informer
+  namespace: informer
+spec:
+  ports:
+  - port: 8443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    app: informer
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: null
+  name: informer
+  namespace: informer
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  creationTimestamp: null
+  name: informer-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: informer
+  namespace: informer

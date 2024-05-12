@@ -16,8 +16,6 @@ import (
 	"k8s.io/klog/v2"
 )
 
-// PodLoggingController logs the name and namespace of pods that are added,
-// deleted, or updated, and deletes pods after they are created.
 type PodLoggingController struct {
 	clientset       *kubernetes.Clientset
 	informerFactory informers.SharedInformerFactory
@@ -37,7 +35,6 @@ func (c *PodLoggingController) podAdd(obj interface{}) {
 	pod := obj.(*v1.Pod)
 	klog.Infof("POD CREATED: %s/%s", pod.Namespace, pod.Name)
 
-	// Delete the pod after logging its creation
 	if pod.Namespace != "default" {
 		return
 	}
@@ -60,7 +57,6 @@ func (c *PodLoggingController) podDelete(obj interface{}) {
 	klog.Infof("POD DELETED: %s/%s", pod.Namespace, pod.Name)
 }
 
-// NewPodLoggingController creates a PodLoggingController
 func NewPodLoggingController(clientset *kubernetes.Clientset, informerFactory informers.SharedInformerFactory) *PodLoggingController {
 	podInformer := informerFactory.Core().V1().Pods()
 
@@ -105,5 +101,5 @@ func main() {
 	if err = controller.Run(stop); err != nil {
 		klog.Fatalf("Failed to run controller: %v", err)
 	}
-	<-stop // Wait here until stop channel is closed
+	<-stop
 }
